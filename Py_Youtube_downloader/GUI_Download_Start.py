@@ -52,17 +52,26 @@ class FtpForm(Form):
         print(video_url)
         quality_mode  = int(self.content['quality_mode or press enter'].get())
         print(quality_mode)
+
         directory = self.content['Saving_directory'].get()
+        if directory == '': directory = None
+        else: directory = os.path.normpath(directory)
+
+
         file_name = self.content['Saving_file_name'].get()
+        if file_name == '': file_name = None
+        else: file_name = os.path.normpath(directory)
         print(file_name)
 
-        if directory: directory=os.path.normpath(directory)
+
+
+
         self.mutex.acquire()
         self.threads += 1
         self.mutex.release()
         ftpargs = (video_url, directory,  file_name, quality_mode)
         _thread.start_new_thread(self.transfer, ftpargs)
-        showinfo(self.title, 'download of "%s" started' % (p_youtube_loader.tmp))
+        showinfo(self.title, 'download of "%s" started' % (p_youtube_loader.tmp_filename))
 
     def onCancel(self):
         if self.threads == 0:

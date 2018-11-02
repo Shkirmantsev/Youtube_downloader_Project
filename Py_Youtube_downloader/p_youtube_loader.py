@@ -7,9 +7,8 @@ from urllib.parse import urlparse, parse_qs
 
 
 tmp_filename= 'downloaded_video'
-tmp_dir=os.path.abspath('./tmp_download')
-#print(tmp_dir)
-tmp_dir=os.path.abspath(tmp_dir)
+tmp_dir_tapmlate=os.path.normpath('./tmp_download')
+tmp_dir=os.path.abspath(tmp_dir_tapmlate)
 #print(tmp_dir)
 
 
@@ -107,7 +106,12 @@ def get_videofile(video_url, directory=None, file_name=None, quality_mode=1):
     directory=directory or tmp_dir
     directory = os.path.normpath(directory)
 
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
     print(directory)
+
+
 
 
     if file_name == None:

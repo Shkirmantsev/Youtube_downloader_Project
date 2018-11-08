@@ -56,7 +56,7 @@ class Form:                                           # add non-modal form box
 
         b = Button(dialogs, text='Save as', command=self.onSave)
         b.grid(row=2, column=0, sticky=NSEW)
-        dialogs.rowconfigure(2, weight=1)
+        dialogs.rowconfigure(2, weight=0)
 
         quality_button=Button(dialogs, text='add_quality', command=self.add_quality)
         quality_button.grid(row=1, column=0, sticky=NSEW)

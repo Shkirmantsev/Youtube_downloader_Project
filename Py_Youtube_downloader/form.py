@@ -9,37 +9,23 @@ from tkinter.filedialog import asksaveasfilename
 from webbrowser import open as open_site
 import os
 from forms_parts.databox import Databox
+from forms_parts.buttonbox import Buttonbox
 
 
 class Form:                                           # add non-modal form box
-    def __init__(self, labels,entrsize=80, parent=None):          # pass field labels list
+    def __init__(self, labels, parent=None):          # pass field labels list
 
         box = Frame(parent)                             # box has rows, buttons
         box.pack(expand=YES, fill=BOTH)                   # rows has row frames
         box.rowconfigure(0, weight=1)
         box.columnconfigure(0, weight=1)
 
-        databox=Databox(labels, box=box)
+        databox=Databox(labels,entrsize=80, box=box)
         self.content=databox.content
 
+        #create buttons menu: save_as,past url,... actr
+        buttonbox=Buttonbox(self.configs, box=box)
 
-        dialogs = Frame(box, bd=2, relief=GROOVE)  # go=button or return key
-        dialogs.grid(row=0, column=1, sticky=NSEW)
-        dialogs.rowconfigure(0, weight=1)
-
-
-
-        paste_button = Button(dialogs, text='Paste URL', command=self.onPaste)
-        paste_button.grid(row=0, column=0, sticky=NSEW)
-        dialogs.rowconfigure(0, weight=1)
-
-        b = Button(dialogs, text='Save as', command=self.onSave)
-        b.grid(row=2, column=0, sticky=NSEW)
-        dialogs.rowconfigure(2, weight=0)
-
-        quality_button=Button(dialogs, text='add_quality', command=self.add_quality)
-        quality_button.grid(row=1, column=0, sticky=NSEW)
-        dialogs.rowconfigure(1, weight=1)
 
         dwnld_button=Button(box, text='Download', command=self.onSubmit)
         dwnld_button.grid(row=1, column=0,sticky=NSEW)
@@ -88,16 +74,10 @@ class Form:                                           # add non-modal form box
     def onCancel(self):                                      # override if need
         Tk().quit()                                          # default is exit
 
-    def onSave(self):                                      # save as file dialog
-        pass
-        save_as_file=asksaveasfilename()
-        print(save_as_file)
-
-        return save_as_file
-
-    def add_quality(self): print("quality")
-
-    def onPaste(self): pass
+    #Prototipes
+    def onSave(self): print("save_as_file function proto in 'form'. just not implemented") # save as file dialog
+    def add_quality(self): print("quality function proto in 'form'. just not implemented")
+    def onPaste(self): print("onPaste function proto in 'form'. just not implemented")
 
     def onPress(self):
         pick=self.var.get()
@@ -121,10 +101,11 @@ class Form:                                           # add non-modal form box
         self.var.set(1)
         self.quality_modes.update()
 
-    def opensite(self):
+    def opensite(self): open_site('http://hutro-meh.com')
 
-        open_site('http://hutro-meh.com')
-
+    configs = (("Paste URL", onPaste),
+               ('add_quality', add_quality),
+               ('Save as', onSave))
 
 
 

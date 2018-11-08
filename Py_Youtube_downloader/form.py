@@ -1,6 +1,6 @@
 """
 ##################################################################
-form class for GUI. Used by Shkirmantsev from Form Luts
+basic form class for GUI. Used by Shkirmantsev
 ##################################################################
 """
 
@@ -8,42 +8,21 @@ from tkinter import *
 from tkinter.filedialog import asksaveasfilename
 from webbrowser import open as open_site
 import os
+from forms_parts.databox import Databox
 
 
 class Form:                                           # add non-modal form box
     def __init__(self, labels,entrsize=80, parent=None):          # pass field labels list
 
-        labelsize = max(len(x) for x in labels) + 2
         box = Frame(parent)                             # box has rows, buttons
         box.pack(expand=YES, fill=BOTH)                   # rows has row frames
         box.rowconfigure(0, weight=1)
         box.columnconfigure(0, weight=1)
-        rows = Frame(box, bd=2, relief=GROOVE)        # go=button or return key
-        rows.grid(row=0, column=0, sticky=NSEW)       # runs onSubmit method
-        rows.columnconfigure(1,weight=1)
+
+        databox=Databox(labels, box=box)
+        self.content=databox.content
 
 
-        self.content = {}
-        i=0
-        for label in labels:
-
-            row = Label(rows, text=label, width=labelsize)
-            row.grid(row=i, column=0, sticky=NSEW)
-            rows.rowconfigure(i, weight=1)
-
-            entry = Entry(rows, relief=SUNKEN, width=entrsize)
-            entry.grid(row=i, column=1, sticky=NSEW )
-
-
-
-            try:
-                self.content[label] = entry
-            except:
-                entrysize=entrysize*2
-                entry = Entry(row, width=entrsize)
-                entry.grid(row=i, column=1, sticky=NSEW)
-                self.content[label] = entry
-            i += 1
         dialogs = Frame(box, bd=2, relief=GROOVE)  # go=button or return key
         dialogs.grid(row=0, column=1, sticky=NSEW)
         dialogs.rowconfigure(0, weight=1)
@@ -62,7 +41,8 @@ class Form:                                           # add non-modal form box
         quality_button.grid(row=1, column=0, sticky=NSEW)
         dialogs.rowconfigure(1, weight=1)
 
-        Button(box, text='Download', command=self.onSubmit).grid(row=1, column=0,sticky=NSEW)
+        dwnld_button=Button(box, text='Download', command=self.onSubmit)
+        dwnld_button.grid(row=1, column=0,sticky=NSEW)
         Button(box, text='Exit', command=self.onCancel).grid(row=1, column=1, sticky=NSEW)
 
         partner = Label(box, text="Our Partners:")
@@ -115,7 +95,7 @@ class Form:                                           # add non-modal form box
 
         return save_as_file
 
-    def add_quality(self): pass
+    def add_quality(self): print("quality")
 
     def onPaste(self): pass
 
@@ -148,11 +128,6 @@ class Form:                                           # add non-modal form box
 
 
 
-
-
-
-
-
 class DynamicForm(Form):
     def __init__(self, labels=None):
         labels = input('Enter field names: ').split()
@@ -165,7 +140,7 @@ class DynamicForm(Form):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) == 1:
-        Form(['Name', 'Age', 'Job'])     # precoded fields, stay after submit
+        Form(['lable_Name', 'lable_Age', 'Lable_Job'])     # precoded fields, stay after submit
     else:
         DynamicForm()                    # input fields, go away after submit
     mainloop()

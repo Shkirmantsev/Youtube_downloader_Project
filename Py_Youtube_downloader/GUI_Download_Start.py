@@ -33,6 +33,7 @@ class FtpForm(Form):
         self.threads = 0
         self.content['quality_mode or press enter'].delete(0, END)
         self.content['quality_mode or press enter'].insert(0, 1)
+        print("content is: ", self.content)
 
 
     def transfer(self, video_url, directory=None, file_name=None, quality_mode=None, ):

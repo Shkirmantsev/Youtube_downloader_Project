@@ -28,7 +28,7 @@ class FtpForm(Form):
                   'Saving_directory',
                   'Saving_file_name']
 
-        Form.__init__(self, labels, entrsize=80, parent=root)
+        Form.__init__(self, labels, parent=root)
         self.mutex = _thread.allocate_lock()
         self.threads = 0
         self.content['quality_mode or press enter'].delete(0, END)

@@ -10,7 +10,7 @@ from webbrowser import open as open_site
 import os
 from forms_parts.databox import Databox
 from forms_parts.buttonbox import Buttonbox
-
+from forms_parts.missionbox import Missionbox
 
 class Form:                                           # add non-modal form box
     def __init__(self, labels, parent=None):          # pass field labels list
@@ -27,20 +27,27 @@ class Form:                                           # add non-modal form box
         #create buttons menu: save_as,past url,... actr
         buttonbox=Buttonbox(self.configs, box=box)
 
+        #create box with main big buttons
+        missionbox=Missionbox(self.configsmission, box)
 
-        dwnld_button=Button(box, text='Download', command=self.onSubmit)
-        dwnld_button.grid(row=1, column=0,sticky=NSEW)
-        Button(box, text='Exit', command=self.onCancel).grid(row=1, column=1, sticky=NSEW)
+
+        #dwnld_button=Button(box, text='Download', command=self.onSubmit)
+        #dwnld_button.grid(row=1, column=0,sticky=NSEW)
+
+        ######Additive advertising block start : =>>
 
         partner = Label(box, text="Our Partners:")
         partner.grid(row=2, columnspan=2, sticky=NSEW)
-        a=str(os.getcwd())+"/hutro.png"
-        self.img=PhotoImage(file=a)
 
-        but=Button(box, command=self.opensite)
+        # images for Buttons
+        imgpath = str(os.getcwd()) + "/hutro.png"
+        self.img = PhotoImage(file=imgpath)
+
+        but = Button(box, command=self.opensite)
         but.grid(row=3, column=0, columnspan=2, sticky=NSEW)
         but.config(image=self.img)
 
+        # Additive advertising block end <<==     ###########
 
         box.master.bind('<Return>', (lambda event: self.onSubmit()))
 
@@ -81,6 +88,9 @@ class Form:                                           # add non-modal form box
     def onSave(self): print("save_as_file function proto in 'form'. just not implemented") # save as file dialog
     def add_quality(self): print("quality function proto in 'form'. just not implemented")
     def onPaste(self): print("onPaste function proto in 'form'. just not implemented")
+    def onDwnldaudio(self): print("onDwnldaudio function proto in 'form'. just not implemented")
+    def onChoose(self): print("onChoose function proto in 'form'. just not implemented")
+    def onConvert(self): print("onConvert function proto in 'form'. just not implemented")
 
     def onPress(self):
         pick=self.var.get()
@@ -109,6 +119,15 @@ class Form:                                           # add non-modal form box
     configs = (("Paste URL", onPaste),
                ('add_quality', add_quality),
                ('Save as', onSave))
+
+    # Name, func, name of png image, "column if not 0 or None", columnspan or None
+    configsmission = (
+        ('Download_video', onSubmit, None),
+        ('Download_as_audio', onDwnldaudio, None),
+        ('choose video for convert in audio', onChoose, None),
+        ('start convert in audio', onConvert, None),
+        ('Exit', onCancel, None),
+                    )
 
 
 

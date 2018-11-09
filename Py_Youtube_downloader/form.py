@@ -20,6 +20,7 @@ class Form:                                           # add non-modal form box
         box.rowconfigure(0, weight=1)
         box.columnconfigure(0, weight=1)
 
+        # create box with text entry fields and labels
         databox=Databox(labels,entrsize=80, box=box)
         self.content=databox.content
 
@@ -42,6 +43,8 @@ class Form:                                           # add non-modal form box
 
 
         box.master.bind('<Return>', (lambda event: self.onSubmit()))
+
+
 
         def create_quality_modes(self):
             self.quality_modes = Frame(box, bd=2, relief=GROOVE)  # go=button or return key

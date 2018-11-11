@@ -16,6 +16,7 @@ from form import Form     # reuse form tool in socket dir
 from tkinter.filedialog import asksaveasfilename
 from tkinter.messagebox import showerror
 
+
 class FtpForm(Form):
     def __init__(self):
         text = ''
@@ -29,8 +30,10 @@ class FtpForm(Form):
                   'Saving_file_name']
 
         Form.__init__(self, labels, parent=root)
+
         self.mutex = _thread.allocate_lock()
         self.threads = 0
+        #print("self content on start: ",self.content)
         self.content['quality_mode or press enter'].delete(0, END)
         self.content['quality_mode or press enter'].insert(0, 1)
         #print("content is: ", self.content)
@@ -52,7 +55,7 @@ class FtpForm(Form):
         video_url = self.content['video_url for download:'].get()
         print(video_url)
         quality_mode  = int(self.content['quality_mode or press enter'].get())
-        print(quality_mode)
+        print("choosed quality_mode is ", quality_mode)
 
         directory = self.content['Saving_directory'].get()
         if directory == '': directory = None
@@ -62,10 +65,7 @@ class FtpForm(Form):
         file_name = self.content['Saving_file_name'].get()
         if file_name == '': file_name = None
         else: file_name = os.path.normpath(directory)
-        print(file_name)
-
-
-
+        print("choosed file name is ",file_name)
 
         self.mutex.acquire()
         self.threads += 1
@@ -74,8 +74,11 @@ class FtpForm(Form):
         _thread.start_new_thread(self.transfer, ftpargs)
         showinfo(self.title, 'download of "%s" started' % (p_youtube_loader.tmp_filename))
 
+
+
     def onCancel(self):
         if self.threads == 0:
+            print("Bye!!!")
             Tk().quit()
         else:
             showinfo(self.title,

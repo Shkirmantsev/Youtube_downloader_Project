@@ -35,7 +35,10 @@ class Missionbox(Frame):  # add non-modal form box
 #############   embeding buttons in box: start ####
 
         def embed(i, boxplace, text, func, imgstr=None, column=None,columnspan=None):
-            def funccommand(self=self,func=func): func(self)
+            def funccommand(self=self,func=func):
+                # return func(self) #<- this solution will not work in GUI_Download_start
+                return eval("self.{0}()".format(func.__name__))
+
             butt=Button(boxplace, text=text, command=funccommand)
             butt.grid(row=i, column=column or 0, columnspan=columnspan or 2, sticky=NSEW)
             boxplace.rowconfigure(i, weight=1)
@@ -60,11 +63,11 @@ class Missionbox(Frame):  # add non-modal form box
 
 ######## functions Prototipes
 
-    def onSubmit(self): print("onSubmit function proto. just not implemented")
-    def onCancel(self): print("onCancel function proto. just not implemented")
-    def onDwnldaudio(self): print("onDwnldaudio function proto. just not implemented")
-    def onChoose(self): print("onChoose function proto. just not implemented")
-    def onConvert(self): print("onConvert function proto. just not implemented")
+    def onSubmit(self): print("onSubmit missionbox function proto. just not implemented")
+    def onCancel(self): print("onCancel missionbox function proto. just not implemented")
+    def onDwnldaudio(self): print("onDwnldaudio missionbox function proto. just not implemented")
+    def onChoose(self): print("onChoose missionbox function proto. just not implemented")
+    def onConvert(self): print("onConvert missionbox function proto. just not implemented")
 
 ########
 

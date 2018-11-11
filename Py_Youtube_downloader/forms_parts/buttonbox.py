@@ -27,7 +27,9 @@ class Buttonbox(Frame):  # add non-modal form box
 #############   embeding buttons in box: start ####
 
         def embed(i, boxplace, text, func):
-            def funccommand(self=self,func=func): func(self)
+            def funccommand(self=self,func=func):
+                # func(self) <- this solution will not work in GUI_Download_start
+                return eval("self.{0}()".format(func.__name__))
             Button(boxplace, text=text, command=funccommand).grid(row=i, column=0, sticky=NSEW)
             boxplace.rowconfigure(i, weight=1)
 

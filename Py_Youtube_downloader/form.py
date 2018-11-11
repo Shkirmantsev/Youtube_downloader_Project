@@ -12,23 +12,31 @@ from forms_parts.databox import Databox
 from forms_parts.buttonbox import Buttonbox
 from forms_parts.missionbox import Missionbox
 
-class Form:                                           # add non-modal form box
+class Form(Databox,Buttonbox,Missionbox):                                           # add non-modal form box
     def __init__(self, labels, parent=None):          # pass field labels list
+
 
         box = Frame(parent)                             # box has rows, buttons
         box.pack(expand=YES, fill=BOTH)                   # rows has row frames
         box.rowconfigure(0, weight=1)
         box.columnconfigure(0, weight=1)
 
+
+        Databox.__init__(self,labels,entrsize=80, box=box)
+        Buttonbox.__init__(self, self.configs, box=box)
+        Missionbox.__init__(self,self.configsmission, box)
+
+        print("running child Class: ", self.__class__.__name__)
+
         # create box with text entry fields and labels
-        databox=Databox(labels,entrsize=80, box=box)
-        self.content=databox.content
+        #databox=Databox(labels,entrsize=80, box=box)
+        #self.content=databox.content
 
         #create buttons menu: save_as,past url,... actr
-        buttonbox=Buttonbox(self.configs, box=box)
+        #buttonbox=Buttonbox(self.configs, box=box)
 
         #create box with main big buttons
-        missionbox=Missionbox(self.configsmission, box)
+        #missionbox=Missionbox(self.configsmission, box)
 
 
         #dwnld_button=Button(box, text='Download', command=self.onSubmit)
@@ -78,16 +86,20 @@ class Form:                                           # add non-modal form box
 
 
     def onSubmit(self):                                      # override this
+        print(self.__class__.__name__)
         for key in self.content:                             # user inputs in
             print(key, '\t=>\t', self.content[key].get())    # self.content[k]
 
     def onCancel(self):                                      # override if need
+        print(self.__class__.__name__)
         Tk().quit()                                          # default is exit
 
     #Prototipes
     def onSave(self): print("save_as_file function proto in 'form'. just not implemented") # save as file dialog
     def add_quality(self): print("quality function proto in 'form'. just not implemented")
-    def onPaste(self): print("onPaste function proto in 'form'. just not implemented")
+    def onPaste(self):
+        print(self.__class__.__name__)
+        print("onPaste function proto in 'form'. just not implemented")
     def onDwnldaudio(self): print("onDwnldaudio function proto in 'form'. just not implemented")
     def onChoose(self): print("onChoose function proto in 'form'. just not implemented")
     def onConvert(self): print("onConvert function proto in 'form'. just not implemented")

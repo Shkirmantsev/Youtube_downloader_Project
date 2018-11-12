@@ -24,23 +24,9 @@ class Form(Databox,Buttonbox,Missionbox):                                       
 
         Databox.__init__(self,labels,entrsize=80, box=box)
         Buttonbox.__init__(self, self.configs, box=box)
-        Missionbox.__init__(self,self.configsmission, box)
+        Missionbox.__init__(self,self.configsmission, box=box)
 
         print("running child Class: ", self.__class__.__name__)
-
-        # create box with text entry fields and labels
-        #databox=Databox(labels,entrsize=80, box=box)
-        #self.content=databox.content
-
-        #create buttons menu: save_as,past url,... actr
-        #buttonbox=Buttonbox(self.configs, box=box)
-
-        #create box with main big buttons
-        #missionbox=Missionbox(self.configsmission, box)
-
-
-        #dwnld_button=Button(box, text='Download', command=self.onSubmit)
-        #dwnld_button.grid(row=1, column=0,sticky=NSEW)
 
         ######Additive advertising block start : =>>
 
@@ -76,8 +62,8 @@ class Form(Databox,Buttonbox,Missionbox):                                       
 
 
             self.var.set(1)
-
             self.quality_modes.grid_forget()
+
         create_quality_modes(self)
         #children=self.quality_modes.winfo_children()
         #print('children: ',children)
@@ -95,6 +81,7 @@ class Form(Databox,Buttonbox,Missionbox):                                       
         Tk().quit()                                          # default is exit
 
     #Prototipes
+    def closing(self): print("closing quality function proto in 'form'. just not implemented")
     def onSave(self): print("save_as_file function proto in 'form'. just not implemented") # save as file dialog
     def add_quality(self): print("quality function proto in 'form'. just not implemented")
     def onPaste(self):
@@ -109,22 +96,8 @@ class Form(Databox,Buttonbox,Missionbox):                                       
         print('you pressed ', pick)
         print('result',self.content_modes[pick])
 
-    def update_button(self):
-        print('TEST2')
+    def update_button(self): print("update_button function proto in 'form'. just not implemented")
 
-        self.quality_modes.grid(row=0, column=2, sticky=NSEW)
-        self.children=self.quality_modes.winfo_children()
-        print('children: ',self.children)
-
-        for child in self.children[1:]:
-            child.destroy()
-
-
-        for key in self.content_modes:
-            Radiobutton(self.quality_modes, text=self.content_modes[key], command=self.onPress, variable=self.var, value=key).pack(
-                anchor=NW)
-        self.var.set(1)
-        self.quality_modes.update()
 
     def opensite(self): open_site('http://hutro-meh.com')
 

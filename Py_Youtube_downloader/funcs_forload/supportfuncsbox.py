@@ -6,7 +6,8 @@ from tkinter.messagebox import showerror, showinfo
 import p_youtube_loader, os, sys, _thread
 from tkinter import *
 from tkinter.filedialog import asksaveasfilename
-
+from tkinter.filedialog import askopenfilename
+from multiprocessing import Process, Lock
 
 # paste from clipboadr
 def onPaste(self):
@@ -18,6 +19,12 @@ def onPaste(self):
         showerror('Youtube Downloader', 'Nothing to paste into URL-field from Clipboard')
         return
     self.content['video_url for download:'].insert(0, str(self.text))
+    try:
+        self.content['Saving_directory'].delete(0, END)
+        self.content['Saving_file_name'].delete(0, END)
+        self.content['video_file_to_convert'].delete(0, END)
+    except: print("can not clean fields from old information")
+
 
 
 #start download process video
@@ -52,8 +59,18 @@ def onSubmit(self):
     else:
         extension=".mp4"
         if file_name[-4:]!=extension:
-            file_name=str(file_name).replace(".","-")
-            file_name+=extension
+            file_name = str(file_name).replace(".", "-")
+            file_name += extension
+            if self.content['video_file_to_convert'].get()!='':
+
+                directory=None
+                file_name=None
+                try:
+                    self.content['Saving_directory'].delete(0, END)
+                    self.content['Saving_file_name'].delete(0, END)
+                    self.content['video_file_to_convert'].delete(0, END)
+                except: print("can not clean wrong field")
+
         print("choosed file name is ", file_name)
 
     self.mutex.acquire()
@@ -62,6 +79,8 @@ def onSubmit(self):
     ftpargs = (video_url, directory, file_name, quality_mode)
     _thread.start_new_thread(self.transfer, ftpargs)
     showinfo(self.title, 'download of "%s" started' % (p_youtube_loader.tmp_filename))
+
+
 
 
 # exit from program
@@ -82,6 +101,46 @@ def onSave(self):  # save as file dialog
     self.content['Saving_directory'].insert(0, str(directory))
     self.content['Saving_file_name'].delete(0, END)
     self.content['Saving_file_name'].insert(0, str(file_name))
+
+# Choose with askopenfile the video file to convert in audio:
+def onChoose(self):
+    choose_as_file=askopenfilename()
+    choose_as_file=os.path.normpath(choose_as_file)
+    directory = os.path.dirname(choose_as_file)
+    file_name = os.path.basename(choose_as_file)
+    self.content['video_file_to_convert'].delete(0, END)
+    self.content['video_file_to_convert'].insert(0, str(choose_as_file))
+    try:
+        self.content['Saving_directory'].delete(0, END)
+        self.content['Saving_directory'].insert(0, str(directory))
+        self.content['Saving_file_name'].delete(0, END)
+        file_name=str(file_name)
+        extension = ".mp3"
+        file_name= file_name[:-4]+extension
+        self.content['Saving_file_name'].insert(0, str(file_name))
+    except: print("can not save mp3 file name")
+    print('Saving_directory: ', self.content['video_file_to_convert'].get())
+    print('Saving_directory: ', self.content['Saving_directory'].get())
+    print('Saving_file_name: ', self.content['Saving_file_name'].get())
+
+
+def onConvert(self):
+
+
+    convfunc = self.convertinmp3
+    thr = self.threads
+    lock=self.lock
+    try:
+        videofrom = self.content['video_file_to_convert'].get()
+        print('videofrom: ',videofrom)
+        musicdir=self.content['Saving_directory'].get()
+        print('musicdir: ', musicdir)
+        musicname=self.content['Saving_file_name'].get()
+        musicfullname=musicdir+os.path.sep+musicname
+        musicfullname=str(os.path.normpath(musicfullname))
+    except: print('can not pick data from fields to cnvert')
+
+    Process(target=convfunc, args=(videofrom,musicfullname,thr,lock)).start()
 
 
 def closing(self): self.quality_modes.grid_forget()

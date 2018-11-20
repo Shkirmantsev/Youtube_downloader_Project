@@ -9,6 +9,7 @@ launch GUI interface for P_youtube_loader.py
 """
 
 import funcs_forload.supportfuncsbox
+from multiprocessing import Value, Lock
 
 from funcs_forload.main_py import main_array
 
@@ -23,6 +24,7 @@ from form import Form
 
 class FtpForm(Form):
     def __init__(self):
+        self.lock=Lock()
         text = ''
         root = Tk()
 
@@ -31,12 +33,14 @@ class FtpForm(Form):
         labels = ['video_url for download:',
                   'quality_mode or press enter',
                   'Saving_directory',
-                  'Saving_file_name']
+                  'Saving_file_name',
+                  'video_file_to_convert']
 
         Form.__init__(self, labels, parent=root)
 
         self.mutex = _thread.allocate_lock()
-        self.threads = 0
+        threadsv=Value('i',0)
+        self.threads = threadsv.value
         #print("self content on start: ",self.content)
         self.content['quality_mode or press enter'].delete(0, END)
         self.content['quality_mode or press enter'].insert(0, 1)

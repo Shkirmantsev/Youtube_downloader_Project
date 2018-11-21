@@ -26,7 +26,8 @@ class FtpForm(Form):
     def __init__(self):
         self.lock=Lock()
         text = ''
-        root = Tk()
+        self.root = Tk()
+        root=self.root
 
         #root.title('Youtube Downloader by Shkirmantsev')
         root.title(self.title)
@@ -56,6 +57,8 @@ class FtpForm(Form):
             func=eval("{0}".format(items[0]))
             setattr(FtpForm,"{0}".format(items[0]),func)
 
+        root.mainloop()
+
 
         #print(directory,file_name,sep="\n")
 
@@ -80,4 +83,4 @@ class FtpGetfileForm(FtpForm):
 
 if __name__ == '__main__':
     FtpGetfileForm()
-    mainloop()
+

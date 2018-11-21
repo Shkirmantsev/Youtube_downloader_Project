@@ -74,7 +74,7 @@ class FtpGetfileForm(FtpForm):
 
 
             #self.mutex.release()
-            print("download audio process was absolutely finished!!!!")
+            print("Finished!!!!")
 
 
 

@@ -39,8 +39,10 @@ class FtpForm(Form):
         Form.__init__(self, labels, parent=root)
 
         self.mutex = _thread.allocate_lock()
+
         threadsv=Value('i',0)
         self.threads = threadsv.value
+
         #print("self content on start: ",self.content)
         self.content['quality_mode or press enter'].delete(0, END)
         self.content['quality_mode or press enter'].insert(0, 1)
@@ -63,10 +65,17 @@ class FtpGetfileForm(FtpForm):
     title = 'Youtube Downloader by Shkirmantsev'
 
     def do_transfer(self, video_url, directory,file_name, quality_mode):
-        p_youtube_loader.get_videofile(video_url, directory,file_name, quality_mode)
-        self.mutex.acquire()
-        self.threads -= 1
-        self.mutex.release()
+        lock=self.lock
+        try:
+            p_youtube_loader.get_videofile(video_url, directory,file_name, quality_mode)
+        finally:
+            self.threads -= 1
+            # self.mutex.acquire()
+
+
+            #self.mutex.release()
+            print("download audio process was absolutely finished!!!!")
+
 
 
 if __name__ == '__main__':

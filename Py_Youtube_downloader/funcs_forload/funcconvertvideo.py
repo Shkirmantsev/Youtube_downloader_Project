@@ -3,6 +3,7 @@
 
 import subprocess
 import os, sys
+import re
 from multiprocessing import Lock
 
 
@@ -13,9 +14,12 @@ def convertinmp3(addr,my_file_addr,thr,lock):
     print("self.threads: ",thr)
     normaddr=os.path.normpath(addr)
     fulladdr=os.path.abspath(normaddr)
+    fulladdr=re.sub(r' ',r'\\ ',fulladdr)
+    my_file_addr=os.path.normpath(my_file_addr)
+    my_file_addr=os.path.abspath(my_file_addr)
+    my_file_addr=re.sub(r' ',r'\\ ',my_file_addr)
     cmdline="ffmpeg -i {0} -f mp3 -ab 320000 -vn {1}".format(fulladdr,my_file_addr)
-    with lock:
-        subprocess.call(cmdline, shell=True)
+    subprocess.call(cmdline, shell=True)
     print("audio from: ",fulladdr)
     print("***END OF FILE***")
     thr -= 1

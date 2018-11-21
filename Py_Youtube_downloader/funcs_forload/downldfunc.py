@@ -4,6 +4,7 @@
 
 import os
 from urllib.request import urlopen
+#from multiprocessing import Lock
 
 
 def downloadurl_file(addr_for_download, directory, my_filename):
@@ -42,3 +43,4 @@ def downloadurl_file(addr_for_download, directory, my_filename):
     downloading_file.close()
 
     print("Saved in ", my_file_addr)
+    return str(my_file_addr)

@@ -8,7 +8,9 @@ from tkinter import *
 from tkinter.filedialog import asksaveasfilename
 from tkinter.filedialog import askopenfilename
 from multiprocessing import Process, Lock
-
+from funcs_forload.funcbox_forload import pull_urlinfo
+from p_youtube_loader import tmp_dir as loadertmp_dir
+import re
 # paste from clipboadr
 def onPaste(self):
     try:
@@ -29,15 +31,18 @@ def onPaste(self):
 
 #start download process video
 def transfer(self, video_url, directory=None, file_name=None, quality_mode=None, ):
+    #lock marker declaration
+    lock=self.lock
     try:
         self.do_transfer(video_url, directory, file_name, quality_mode)
         # print('saved in "%s"'  % (p_youtube_loader.tmp_dir))
     except:
-        print('Download failed', end=' ')
-        print(sys.exc_info()[0], sys.exc_info()[1])
-        self.mutex.acquire()
-        self.threads -= 1
-        self.mutex.release()
+        with lock:
+            print('Download failed', end=' ')
+        with lock:
+            print(sys.exc_info()[0], sys.exc_info()[1])
+
+        #self.mutex.release()
 
 
 #start
@@ -69,6 +74,8 @@ def onSubmit(self):
                     self.content['Saving_directory'].delete(0, END)
                     self.content['Saving_file_name'].delete(0, END)
                     self.content['video_file_to_convert'].delete(0, END)
+                    directory = None
+                    file_name = None
                 except: print("can not clean wrong field")
 
         print("choosed file name is ", file_name)
@@ -78,7 +85,86 @@ def onSubmit(self):
     self.mutex.release()
     ftpargs = (video_url, directory, file_name, quality_mode)
     _thread.start_new_thread(self.transfer, ftpargs)
-    showinfo(self.title, 'download of "%s" started' % (p_youtube_loader.tmp_filename))
+    showinfo(self.title, 'download of "%s" started' % (file_name or p_youtube_loader.tmp_filename))
+
+
+ #download at first video, then convert in audio. Via Process
+def onDwnldaudio(self):
+
+    #lock marker for process
+    lock=self.lock
+
+
+    #Form.onSubmit(self)
+    # Collect all data from fields of form (databox)
+    video_url = self.content['video_url for download:'].get()
+    print(video_url)
+    videotitel=pull_urlinfo(video_url)['title'][0]
+    if videotitel[-4:]!=".mp4": videotitel=videotitel+".mp4"
+
+    quality_mode  = int(self.content['quality_mode or press enter'].get())
+    print("choosed quality_mode is ", quality_mode)
+
+    directory = self.content['Saving_directory'].get()
+    if directory == '': directory = None
+    else: directory = os.path.normpath(directory)
+
+    file_name = self.content['Saving_file_name'].get()
+    if file_name == '':
+        file_name = None
+    else:
+        extension=".mp4"
+        if file_name[-4:]!=extension:
+            file_name = str(file_name).replace(".", "-")
+            file_name += extension
+            if self.content['video_file_to_convert'].get()!='':
+
+                directory=None
+                file_name=None
+                try:
+                    self.content['Saving_directory'].delete(0, END)
+                    self.content['Saving_file_name'].delete(0, END)
+                    self.content['video_file_to_convert'].delete(0, END)
+                    directory = None
+                    file_name = None
+                except: print("can not clean wrong field")
+
+        print("choosed file name is ", file_name)
+
+    #self.mutex.acquire()
+    with lock:
+        self.threads += 1
+        print("increase processes: ",self.threads)
+    #self.mutex.release()
+    ftpargs = (video_url, directory, file_name, quality_mode)
+    def tmpfunc(transfer=self.transfer,ftpargs=ftpargs):
+        file_name=ftpargs[2]
+        transferprocess=Process(target=transfer, args=ftpargs)
+
+        transferprocess.start()
+        showinfo(self.title, 'download of "%s" started' % (file_name or p_youtube_loader.tmp_filename))
+        transferprocess.join()
+
+
+        directory=ftpargs[1] or loadertmp_dir
+        file_name=file_name or videotitel
+        my_file_addr=directory+os.path.sep+file_name
+
+        newaudio=my_file_addr
+        if newaudio[-4:]==".mp4":
+            newaudio=newaudio[:-4]+".mp3"
+        else: newaudio=newaudio+".mp3"
+
+        thr=self.threads
+        print("will converted from: ",my_file_addr,"\n to: \n", newaudio)
+
+        convertprprocess = Process(target=self.convertinmp3, args=(my_file_addr,newaudio,thr,lock))
+        convertprprocess.start()
+        convertprprocess.join()
+        self.threads -= 1
+
+
+    _thread.start_new_thread(tmpfunc, (self.transfer,ftpargs))
 
 
 

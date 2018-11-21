@@ -8,6 +8,7 @@ import os
 from funcs_forload.funcbox_forload import show_items_content
 from funcs_forload.funcbox_forload import pull_urlinfo
 from funcs_forload.downldfunc import downloadurl_file
+from multiprocessing import Lock
 #####
 
 tmp_filename= 'downloaded_video'
@@ -34,6 +35,8 @@ def analise(video_url):
 
 def get_videofile(video_url, directory=None, file_name=None, quality_mode=1):
 
+    lock=Lock()
+
     url_info = pull_urlinfo(video_url)
 
     title = url_info['title'][0]
@@ -41,10 +44,13 @@ def get_videofile(video_url, directory=None, file_name=None, quality_mode=1):
     directory=directory or tmp_dir
     directory = os.path.normpath(directory)
 
-    if not os.path.exists(directory):
-        os.mkdir(directory)
 
-    print(directory)
+    if not os.path.exists(directory):
+        with lock:
+            os.mkdir(directory)
+
+    with lock:
+        print(directory)
 
 
 
@@ -53,7 +59,8 @@ def get_videofile(video_url, directory=None, file_name=None, quality_mode=1):
     else:
         my_filename = str(file_name).replace("/", "-")
 
-    print(my_filename)
+    with lock:
+        print(my_filename)
 
 
     items_content = show_items_content(url_info)
@@ -62,7 +69,8 @@ def get_videofile(video_url, directory=None, file_name=None, quality_mode=1):
 
 
     for keys in quality_items_txtinfo:
-        print("quality_mode: ", keys, "quality: ", quality_items_txtinfo[keys])
+        with lock:
+            print("quality_mode: ", keys, "quality: ", quality_items_txtinfo[keys])
 
     addr_for_download = quality_urls[quality_mode]
 

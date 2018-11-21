@@ -173,7 +173,7 @@ def onDwnldaudio(self):
 def onCancel(self):
     if self.threads == 0:
         print("Bye!!!")
-        Tk().quit()
+        self.root.quit()
     else:
         showinfo(self.title,'Cannot exit: %d threads running' % self.threads)
 

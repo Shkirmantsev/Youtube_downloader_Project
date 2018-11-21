@@ -47,7 +47,7 @@ class Form(Databox,Buttonbox,Missionbox):                                       
 
 
 
-        def create_quality_modes(self):
+        """def create_quality_modes(self):
             self.quality_modes = Frame(box, bd=2, relief=GROOVE)  # go=button or return key
 
             self.quality_modes.grid(row=0, column=2, sticky=NSEW)
@@ -62,14 +62,28 @@ class Form(Databox,Buttonbox,Missionbox):                                       
 
 
             self.var.set(1)
-            self.quality_modes.grid_forget()
+            self.quality_modes.grid_forget()"""
 
-        create_quality_modes(self)
+        self.create_quality_modes(box)
         #children=self.quality_modes.winfo_children()
         #print('children: ',children)
         #children[1].destroy()
 
+    def create_quality_modes(self,box):
+        self.quality_modes = Frame(box, bd=2, relief=GROOVE)  # go=button or return key
 
+        self.quality_modes.grid(row=0, column=2, sticky=NSEW)
+        Label(self.quality_modes, text="quality modes:").pack(anchor=NW, expand=NO)
+
+        self.content_modes = {1: 'test1'}
+        self.var = IntVar()
+        for key in self.content_modes:
+            Radiobutton(self.quality_modes, text=self.content_modes[key], command=self.onPress, variable=self.var,
+                        value=key).pack(
+                anchor=NW, )
+
+        self.var.set(1)
+        self.quality_modes.grid_forget()
 
     def onSubmit(self):                                      # override this
         print(self.__class__.__name__)

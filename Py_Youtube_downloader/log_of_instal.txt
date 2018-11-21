@@ -1,4 +1,3 @@
-#converter video->audio:
-https://github.com/senko/python-video-converter.git
 
+#converter video->audio:
 sudo apt install ffmpeg

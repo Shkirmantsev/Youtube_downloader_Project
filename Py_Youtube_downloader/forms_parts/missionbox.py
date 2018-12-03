@@ -26,8 +26,8 @@ class Missionbox(Frame):  # add non-modal form box
         missionboxframe.columnconfigure(0, weight=1)
 
         # images for Buttons
-        #imgpath = str(os.getcwd()) + "/hutro.png"
-        #self.img = PhotoImage(file=imgpath)
+        imgpath = str(os.getcwd()) + "/exit.png"
+        self.testimg = PhotoImage(file=imgpath)
 
 
 
@@ -76,7 +76,7 @@ class Missionbox(Frame):  # add non-modal form box
         ('Download_as_audio', onDwnldaudio, None),
         ('choose video for convert in audio', onChoose, None),
         ('start convert in audio', onConvert, None),
-        ('Exit', onCancel, None),
+        ('Exit', onCancel, 'testimg'),
                     )
 
 

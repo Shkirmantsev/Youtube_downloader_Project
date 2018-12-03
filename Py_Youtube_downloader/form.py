@@ -21,6 +21,11 @@ class Form(Databox,Buttonbox,Missionbox):                                       
         box.rowconfigure(0, weight=1)
         box.columnconfigure(0, weight=1)
 
+        # images for Buttons
+        imgpath = str(os.getcwd()) + "/exit.png"
+        self.eximg = PhotoImage(file=imgpath)
+
+
 
         Databox.__init__(self,labels,entrsize=80, box=box)
         Buttonbox.__init__(self, self.configs, box=box)
@@ -107,7 +112,7 @@ class Form(Databox,Buttonbox,Missionbox):                                       
         ('Download_as_audio', onDwnldaudio, None),
         ('choose video for convert in audio', onChoose, None),
         ('start convert in audio', onConvert, None),
-        ('Exit', onCancel, None),
+        ('Exit', onCancel, 'eximg'),
                     )
 
 

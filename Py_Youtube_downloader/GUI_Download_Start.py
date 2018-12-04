@@ -1,5 +1,5 @@
 #!/usr/bin/pypy3
-#  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 """
 version 1.0

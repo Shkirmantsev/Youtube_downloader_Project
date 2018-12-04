@@ -13,9 +13,10 @@ for example
 
 from tkinter import *
 import os
+from .embedfactory import Embedfac # to unit testing del the point
 
 
-class Missionbox(Frame):  # add non-modal form box
+class Missionbox(Embedfac):  # add non-modal form box
 
     def __init__(self, configs=None, box=None):
 
@@ -29,36 +30,14 @@ class Missionbox(Frame):  # add non-modal form box
         imgpath = str(os.getcwd()) + "/exit.png"
         self.testimg = PhotoImage(file=imgpath)
 
-
-
-
-#############   embeding buttons in box: start ####
-
-        def embed(i, boxplace, text, func, imgstr=None, column=None,columnspan=None):
-            def funccommand(self=self,func=func):
-                # return func(self) #<- this solution will not work in GUI_Download_start
-                return eval("self.{0}()".format(func.__name__))
-
-            butt=Button(boxplace, text=text, command=funccommand)
-            butt.grid(row=i, column=column or 0, columnspan=columnspan or 2, sticky=NSEW)
-            boxplace.rowconfigure(i, weight=1)
-            if imgstr:
-                img=self.returnimage(imgstr)
-                butt.config(image=img)
-
+        #############   embeding buttons in box: start ####
 
         lenconfig = len(configs)
 
-        for i in range(lenconfig): embed(i, missionboxframe, configs[i][0], configs[i][1], configs[i][2])
+        for i in range(lenconfig): self.embed(i, missionboxframe, configs[i][0], configs[i][1], configs[i][2])
 
+        ############## end        ###############
 
-############## end        ###############
-
-
-
-
-    #return img path in class from images' name
-    def returnimage(self, imgpng): return getattr(self, "{0}".format(imgpng))
 
 
 ######## functions Prototipes

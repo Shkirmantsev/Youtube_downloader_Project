@@ -12,9 +12,9 @@ for example
 """
 
 from tkinter import *
+from .embedfactory import Embedfac
 
-
-class Buttonbox(Frame):  # add non-modal form box
+class Buttonbox(Embedfac):  # add non-modal form box
 
     def __init__(self, configs=None, box=None):
 
@@ -24,19 +24,14 @@ class Buttonbox(Frame):  # add non-modal form box
         dialogs.grid(row=0, column=1, sticky=NSEW)
         dialogs.rowconfigure(0, weight=1)
 
-#############   embeding buttons in box: start ####
+        #############   embeding buttons in box: start ####
 
-        def embed(i, boxplace, text, func):
-            def funccommand(self=self,func=func):
-                # func(self) <- this solution will not work in GUI_Download_start
-                return eval("self.{0}()".format(func.__name__))
-            Button(boxplace, text=text, command=funccommand).grid(row=i, column=0, sticky=NSEW)
-            boxplace.rowconfigure(i, weight=1)
 
         lenconfig = len(configs)
 
-        for i in range(lenconfig): embed(i, dialogs, configs[i][0], configs[i][1])
-############## end        ###############
+        for i in range(lenconfig): self.embed(i, dialogs, configs[i][0], configs[i][1])
+
+        ############## end        ###############
 
 
 ######## functions Prototipes

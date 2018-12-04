@@ -18,6 +18,9 @@ from tkinter import *
 import p_youtube_loader, os, sys, _thread                # FTP getfile here, not socket
 
 from form import Form
+# help for pyinstaller:
+from funcs_forload import *
+from funcs_forload.funcconvertvideo import *
 
 
 
